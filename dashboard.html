@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+    /* Shift summary table styling ONLY */
+    .shift-summary {
+        width: 100%;
+        border-collapse: collapse;
+        background: rgb(17, 17, 17); /* table body white */
+    }
+
+    .shift-summary th, .shift-summary td {
+        padding: 12px 15px;
+        border: 1px solid #f9fafa;
+        text-align: center;
+    }
+
+    .shift-summary th {
+        background-color: #4CAF50; /* header green */
+        color: rgb(10, 10, 10);
+        font-weight: bold;
+    }
+
+    .shift-summary tr:nth-child(even) {
+        background-color: #161616; /* alternate row light gray */
+    }
+
+    .shift-summary tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    @media screen and (max-width: 768px) {
+        .shift-summary th, .shift-summary td {
+            padding: 8px;
+        }
+    }
+        @media screen and (max-width: 480px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        h2 {
+            margin-top: 30px;
+            font-size: 1.5em;
+        }
+    </style>
+<script>
+    function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("show");
+        document.getElementById("backdrop").classList.toggle("show");
+    }
+
+    function startProduction() {
+        fetch("/start", { method: "POST" });
+    }
+
+    function stopProduction() {
+        fetch("/stop", { method: "POST" });
+    }
+
+    function formatTime(sec) {
+        let hours = Math.floor(sec / 3600);
+        let minutes = Math.floor((sec % 3600) / 60);
+        let seconds = sec % 60;
+        return `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+    }
+
+    function updateDashboard() {
+        fetch("/update")
+            .then(r => r.json())
+            .then(data => {
+                let item = data.current_item || "-";
+                let sec = data.time_in_sec ? data.time_in_sec : "-";
+                let count = data.count || 0;
+                let target = data.target_count || 0;
+                let elapsed = data.elapsed_seconds || 0;
+
+                document.getElementById("liveItem").innerText = item;
+                document.getElementById("liveSec").innerText = sec;
+                document.getElementById("liveCount").innerText = count;
+                document.getElementById("targetCount").innerText = target;
+                document.getElementById("runTime").innerText = formatTime(elapsed);
+            })
+            .catch(err => console.log("Update error:", err));
+    }
+    setInterval(updateDashboard, 1000);
+
+    function updateLatestItem() {
+        fetch("/get_latest_item")
+            .then(r => r.json())
+            .then(data => {
+                if (!data.running) {
+                    document.getElementById("liveItem").innerText = data.current_item || "-";
+                    document.getElementById("liveSec").innerText = data.time_in_sec || "-";
+                    document.getElementById("targetCount").innerText = data.target_count || 0;
+                    document.getElementById("liveCount").innerText = data.count || 0;
+                }
+            })
+            .catch(err => console.log("Latest item fetch error:", err));
+    }
+    setInterval(updateLatestItem, 3000);
+
+    function updateShift() {
+        fetch("/current_shift")
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById("currentShift").innerText = data.shift || "-";
+            })
+            .catch(err => console.log("Shift update error:", err));
+    }
+    setInterval(updateShift, 10000);
+</script>
+</head>
+<body>
+
+    <div class="backdrop" id="backdrop" onclick="toggleSidebar()"></div>
+
+    <div class="sidebar" id="sidebar">
+        <a href="/">📊 Dashboard</a>
+        <a href="/settings">⚙ Settings</a>
+        <a href="/report">📝 Report</a>
+    </div>
+
+    <div class="header">
+        <span class="menu-btn" onclick="toggleSidebar()">☰</span>
+        <h1>🏭 Production Monitoring System</h1>
+    </div>
+
+    <div class="main">
+
+        <div class="dashboard">
+
+            <div class="card">
+                <h3>Current Item</h3>
+                <p id="liveItem" class="value">-</p>
+            </div>
+
+            <div class="card">
+                <h3>Seconds / Item</h3>
+                <p id="liveSec" class="value">-</p>
+            </div>
+
+            <div class="card">
+                <h3>Target Count</h3>
+                <p id="targetCount" class="value">0</p>
+            </div>
+
+            <div class="card highlight">
+                <h3>Production Count</h3>
+                <p id="liveCount" class="count-value">0</p>
+            </div>
+
+            <div class="card">
+                <h3>Elapsed Time</h3>
+                <p id="runTime" class="value">0 sec</p>
+            </div>
+
+            <div class="card">
+                <h3>Current Shift</h3>
+                <p id="currentShift" class="value">-</p>
+            </div>
+
+        </div>
+
+        <h2>Shift-wise Production Summary</h2>
+        <div style="overflow-x:auto;">
+        <table class="shift-summary">
+            <tr>
+                <th>Shift</th>
+                <th>Total Count</th>
+                <th>Total Production Time</th>
+            </tr>
+            {% for shift, stats in shift_totals.items() %}
+            <tr>
+                <td>{{ shift }}</td>
+                <td>{{ stats.count }}</td>
+                <td>
+                    {% set h = stats.time // 3600 %}
+                    {% set m = (stats.time % 3600) // 60 %}
+                    {% set s = stats.time % 60 %}
+                    {{ "%02d:%02d:%02d"|format(h, m, s) }}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        </div>
+
+        <button class="btn start" onclick="startProduction()">Start</button>
+        <button class="btn stop" onclick="stopProduction()">Stop</button>
+
+    </div>
+
+</body>
+</html>

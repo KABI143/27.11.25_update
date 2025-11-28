@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Production Report</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script>
+        function toggleSidebar() {
+            document.getElementById("sidebar").classList.toggle("show");
+            document.getElementById("backdrop").classList.toggle("show");
+        }
+
+        function toggleFilters() {
+            let type = document.getElementById("report_type").value;
+            document.getElementById("shift_div").style.display = (type=="shift") ? "block" : "none";
+            document.getElementById("month_div").style.display = (type=="month") ? "block" : "none";
+        }
+    </script>
+</head>
+<body onload="toggleFilters()">
+
+<div class="backdrop" id="backdrop" onclick="toggleSidebar()"></div>
+
+<div class="sidebar" id="sidebar">
+    <a href="/">📊 Dashboard</a>
+    <a href="/settings">⚙ Settings</a>
+    <a href="/report">📝 Report</a>
+</div>
+
+<div class="header">
+    <span class="menu-btn" onclick="toggleSidebar()">☰</span>
+    <h1>📝 Production Reports</h1>
+</div>
+
+<div class="main">
+
+    <!-- Filter form -->
+    <form method="get" class="settings-form">
+        <label>From Date</label>
+        <input type="date" name="from_date" value="{{ request.args.get('from_date','') }}">
+        
+        <label>To Date</label>
+        <input type="date" name="to_date" value="{{ request.args.get('to_date','') }}">
+        
+        <label>Report Type</label>
+        <select name="report_type" id="report_type" onchange="toggleFilters()">
+            <option value="">Select Type</option>
+            <option value="shift" {% if request.args.get('report_type')=='shift' %}selected{% endif %}>Shift-wise</option>
+            <option value="month" {% if request.args.get('report_type')=='month' %}selected{% endif %}>Month-wise</option>
+        </select>
+
+        <!-- Shift filter -->
+        <div id="shift_div" style="display:none;">
+            <label>Shift</label>
+            <select name="shift">
+                <option value="">All</option>
+                <option value="A" {% if request.args.get('shift')=='A' %}selected{% endif %}>Shift A</option>
+                <option value="B" {% if request.args.get('shift')=='B' %}selected{% endif %}>Shift B</option>
+                <option value="C" {% if request.args.get('shift')=='C' %}selected{% endif %}>Shift C</option>
+            </select>
+        </div>
+
+        <!-- Month filter -->
+        <div id="month_div" style="display:none;">
+            <label>Month</label>
+            <input type="month" name="month" value="{{ request.args.get('month','') }}">
+        </div>
+
+        <button type="submit" class="btn start">Filter</button>
+        <a href="/report"><button type="button" class="btn stop">Reset</button></a>
+    </form>
+
+    <!-- Export to Excel -->
+    <div style="margin: 15px 0;">
+        <a href="/export_excel" class="btn start">📥 Export to Excel</a>
+    </div>
+
+   <!-- Report Table -->
+<table class="report-table">
+    <tr>
+        <th>Item</th>
+        <th>Sec/Item</th>
+        <th>Count</th>
+        <th>Start</th>
+        <th>Stop</th>
+        <th>Total Time</th> <!-- renamed -->
+        <th>Shift</th>
+    </tr>
+    {% for r in reports %}
+    <tr>
+        <td>{{ r.item }}</td>
+        <td>{{ r.seconds_per_item }}</td>
+        <td>{{ r.count }}</td>
+        <td>{{ r.start_time }}</td>
+        <td>{{ r.stop_time }}</td>
+        <td>
+            {% set h = r.total_seconds // 3600 %}
+            {% set m = (r.total_seconds % 3600) // 60 %}
+            {% set s = r.total_seconds % 60 %}
+            {{ "%02d:%02d:%02d"|format(h, m, s) }}
+        </td>
+        <td>{{ r.shift }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+</div>
+</body>
+</html>

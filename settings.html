@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Settings</title>
+    <link rel="stylesheet" href="/static/style.css">
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById("sidebar").classList.toggle("show");
+            document.getElementById("backdrop").classList.toggle("show");
+        }
+    </script>
+
+    <style>
+        /* FLEXBOX FOR ACTION BUTTONS */
+        .action-box {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        /* EDIT BUTTON - GREEN */
+        .edit-btn {
+            background: #2ecc71;
+            color: white;
+            padding: 6px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            width: 70px;
+            font-size: 14px;
+            text-align: center;
+        }
+        .edit-btn:hover {
+            background: #27ae60;
+        }
+
+        /* DELETE BUTTON - RED */
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+            padding: 6px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 70px;
+            font-size: 14px;
+            text-align: center;
+        }
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+
+        /* INLINE FORM RESET */
+        .inline-form {
+            display: inline;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* TABLE STYLING */
+        .queue-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .queue-table th, .queue-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        .queue-table th {
+            background-color: #f2f2f2;
+        }
+
+        /* RESPONSIVE */
+        @media screen and (max-width: 600px) {
+            .edit-btn, .delete-btn {
+                width: 60px;
+                font-size: 12px;
+            }
+        }
+
+        /* FORM STYLING */
+        .settings-form {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 400px;
+        }
+        .settings-form label {
+            font-weight: bold;
+        }
+        .settings-form input, .settings-form select {
+            padding: 6px 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .btn.start {
+            background-color: #3498db;
+            color: white;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn.start:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="backdrop" id="backdrop" onclick="toggleSidebar()"></div>
+
+    <div class="sidebar" id="sidebar">
+        <a href="/">📊 Dashboard</a>
+        <a href="/settings">⚙ Settings</a>
+        <a href="/report">📝 Report</a>
+    </div>
+
+    <div class="header">
+        <span class="menu-btn" onclick="toggleSidebar()">☰</span>
+        <h1>⚙ Production Settings</h1>
+    </div>
+
+    <div class="main">
+
+        <!-- ADD ITEM FORM -->
+        <form action="/save_settings" method="POST" class="settings-form">
+            <label>Item Name</label>
+            <input type="text" name="item" required placeholder="Enter item name">
+
+            <label>Seconds Per Item</label>
+            <input type="number" name="seconds" required placeholder="Enter seconds per item">
+
+            <label>Total Count</label>
+            <input type="number" name="total_count" required placeholder="Enter total count">
+
+            <label>Shift</label>
+            <select name="shift" required>
+                <option value="A">A Shift (12:30 AM - 7:30 AM)</option>
+                <option value="B">B Shift (7:20 AM - 4:00 PM)</option>
+                <option value="C">C Shift (4:00 PM - 12:30 AM)</option>
+            </select>
+
+            <button type="submit" class="btn start">Add Item</button>
+        </form>
+
+        <h3 style="margin-top: 40px;">Current Queue:</h3>
+
+        <!-- QUEUE TABLE -->
+        <table class="queue-table">
+            <tr>
+                <th>#</th>
+                <th>Item Name</th>
+                <th>Seconds / Item</th>
+                <th>Target Count</th>
+                <th>Shift</th>
+                <th>Actions</th>
+            </tr>
+
+            {% for item in production_data.items_queue %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ item.item }}</td>
+                <td>{{ item.seconds }}</td>
+                <td>{{ item.target_count }}</td>
+                <td>{{ item.shift }}</td>
+                <td>
+                    <div class="action-box">
+                        <!-- EDIT BUTTON -->
+                        <a class="edit-btn" href="/edit_item/{{ loop.index0 }}">Edit</a>
+
+                        <!-- DELETE BUTTON -->
+                        <form action="/delete_item/{{ loop.index0 }}" method="POST" class="inline-form">
+                            <button type="submit" class="delete-btn"
+                                onclick="return confirm('Delete this item?')">
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6">No items in queue</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+
+</body>
+</html>

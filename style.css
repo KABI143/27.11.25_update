@@ -1,0 +1,241 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #1b1b1b;
+    color: white;
+}
+
+/* HEADER */
+.header {
+    height: 60px;
+    background: #111;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    box-shadow: 0 0 10px #000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 20;
+}
+
+.menu-btn {
+    font-size: 26px;
+    cursor: pointer;
+    margin-right: 15px;
+    color: #00eaff;
+}
+
+.header h1 {
+    font-size: 20px;
+    color: #00eaff;
+}
+
+/* SLIDE SIDEBAR */
+.sidebar {
+    width: 220px;
+    background: #141414;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: -230px;
+    padding-top: 60px;
+    transition: 0.3s ease;
+    box-shadow: 3px 0 10px #000;
+    z-index: 30;
+}
+
+.sidebar.show {
+    left: 0;
+}
+
+.sidebar a {
+    display: block;
+    color: white;
+    padding: 15px 20px;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.sidebar a:hover {
+    background: #00eaff33;
+}
+
+/* BACKDROP */
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #00000088;
+    display: none;
+    z-index: 25;
+}
+
+.backdrop.show {
+    display: block;
+}
+
+/* MAIN CONTENT */
+.main {
+    padding: 90px 20px;
+}
+
+/* Dashboard Cards */
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: #232323;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 12px #00eaff33;
+    text-align: center;
+}
+
+.value {
+    font-size: 26px;
+    color: #00eaff;
+}
+
+.highlight {
+    background: #003f4f;
+}
+
+.count-value {
+    font-size: 40px;
+    color: #00ff99;
+}
+
+/* Buttons */
+.btn {
+    padding: 12px 20px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+.start { background: #00cc66; }
+.stop { background: #e82c2c; }
+
+/* Responsive Settings Form */
+.settings-form {
+    max-width: 450px;
+    margin: auto;
+    background: #232323;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 0 12px #00eaff55;
+}
+
+.settings-form input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    background: #111;
+    border: 1px solid #555;
+    color: white;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: #232323;
+}
+
+.report-table th, .report-table td {
+    border: 1px solid #444;
+    padding: 10px;
+    text-align: center;
+}
+
+.report-table th {
+    background: #111;
+    color: #00eaff;
+}
+
+.report-table td {
+    color: #fff;
+}
+
+.settings-form label, .settings-form select, .settings-form input {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.settings-form button {
+    margin-top: 15px;
+}
+/* Current Queue Table */
+.queue-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: #232323;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.queue-table th, .queue-table td {
+    border: 1px solid #444;
+    padding: 12px;
+    text-align: center;
+    color: white;
+}
+
+.queue-table th {
+    background: #111;
+    color: #00eaff;
+    font-size: 16px;
+}
+
+.queue-table td {
+    font-size: 14px;
+}
+
+.queue-table tr:nth-child(even) {
+    background: #1a1a1a;
+}
+
+.queue-table button.edit-btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #00cc66;
+    color: white;
+    font-size: 12px;
+    transition: 0.2s;
+}
+
+.queue-table button.edit-btn:hover {
+    background: #00ff88;
+}
+
+.queue-table button.delete-btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #e82c2c;
+    color: white;
+    font-size: 12px;
+    transition: 0.2s;
+}
+
+.queue-table button.delete-btn:hover {
+    background: #ff5555;
+}
