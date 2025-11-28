@@ -1,0 +1,9 @@
+//static
+ script.js
+ style.css
+ templates
+ dasboard.html
+ html...
+
+ app.py
+ data.json
