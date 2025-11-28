@@ -1,0 +1,85 @@
+{
+    "production_data": {
+        "current_item": "STATOR",
+        "time_in_sec": 1,
+        "count": 10,
+        "start_time": 1764263454.8932233,
+        "running": false,
+        "target_count": 10,
+        "items_queue": []
+    },
+    "report_history": [
+        {
+            "item": "MY",
+            "seconds_per_item": 1,
+            "count": 10,
+            "start_time": "2025-11-27 20:47:19",
+            "stop_time": "2025-11-27 20:47:30",
+            "total_seconds": 10,
+            "shift": "C"
+        },
+        {
+            "item": "MY",
+            "seconds_per_item": 10,
+            "count": 10,
+            "start_time": "2025-11-27 20:56:53",
+            "stop_time": "2025-11-27 20:58:34",
+            "total_seconds": 100,
+            "shift": "C"
+        },
+        {
+            "item": "NEW",
+            "seconds_per_item": 1,
+            "count": 10,
+            "start_time": "2025-11-27 20:58:34",
+            "stop_time": "2025-11-27 20:58:44",
+            "total_seconds": 10,
+            "shift": "C"
+        },
+        {
+            "item": "NEW",
+            "seconds_per_item": 1,
+            "count": 10,
+            "start_time": "2025-11-27 21:07:47",
+            "stop_time": "2025-11-27 21:07:57",
+            "total_seconds": 10,
+            "shift": "C"
+        },
+        {
+            "item": "NEW",
+            "seconds_per_item": 1,
+            "count": 10,
+            "start_time": "2025-11-27 21:56:52",
+            "stop_time": "2025-11-27 21:57:03",
+            "total_seconds": 10,
+            "shift": "C"
+        },
+        {
+            "item": "MY",
+            "seconds_per_item": 10,
+            "count": 10,
+            "start_time": "2025-11-27 21:57:03",
+            "stop_time": "2025-11-27 21:58:44",
+            "total_seconds": 100,
+            "shift": "C"
+        },
+        {
+            "item": "STATOR",
+            "seconds_per_item": 1,
+            "count": 10,
+            "start_time": "2025-11-27 22:01:46",
+            "stop_time": "2025-11-27 22:01:57",
+            "total_seconds": 10,
+            "shift": "C"
+        },
+        {
+            "item": "STATOR",
+            "seconds_per_item": 1,
+            "count": 10,
+            "start_time": "2025-11-27 22:40:54",
+            "stop_time": "2025-11-27 22:41:05",
+            "total_seconds": 10,
+            "shift": "C"
+        }
+    ]
+}
